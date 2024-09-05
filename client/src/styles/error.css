@@ -1,0 +1,40 @@
+main {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 8;
+    display: block;
+    background-image: url("../assets/logo_no_text_white.svg");
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: 1200px;
+}
+main > div {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: fit-content;
+    width: fit-content;
+}
+main > div > * {
+    color: red;
+    display: block;
+    text-align: center;
+    width: 100%;
+}
+main > div > title {
+    font-size: 80px;
+    font-family: monospace;
+    font-weight: bolder;
+}
+main > div > div {
+    font-size: 20px;
+}
+main > div > p {
+    color: #919191;
+}

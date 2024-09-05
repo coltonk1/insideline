@@ -1,0 +1,25 @@
+main {
+    width: calc(100% - 40px);
+}
+
+main > input {
+    position: sticky;
+    display: block;
+    z-index: 8;
+    top: 80px;
+    border-radius: 50px;
+    padding: 15px 20px;
+    font-size: 20px;
+    width: 80%;
+    height: -moz-fit-content;
+    height: fit-content;
+    transition: 0.2s background, 0.2s box-shadow;
+    margin: auto;
+    box-shadow: inset 0 0 0 transparent, 3px 3px 10px 2px #80808050;
+    left: 0;
+    right: 0;
+}
+
+header {
+    margin-bottom: 0;
+}

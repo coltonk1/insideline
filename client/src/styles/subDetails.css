@@ -1,0 +1,39 @@
+main {
+    padding: 100px 0;
+    box-sizing: border-box;
+    max-width: 1200px;
+}
+
+.invoice {
+    padding: 50px;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 10px 3px #80808050;
+    background: #80808010;
+    border-radius: 50px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.information > p {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.card-details {
+    margin-top: 50px;
+    font-size: 20px;
+}
+.card-details > p {
+    font-size: 16px;
+    color: grey;
+}
+
+.due-date {
+    color: grey;
+}
+
+.amt-due {
+    font-weight: bolder;
+    font-size: 30px;
+}

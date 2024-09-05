@@ -1,0 +1,53 @@
+.profile-picture-container {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+main input,
+main p,
+main textarea {
+    width: 400px;
+    outline: none;
+    padding: 12px 30px;
+    border-radius: 35px;
+    border: none;
+    background: #f3f3f3;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #303035;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+main > input::placeholder {
+    color: #000000c0;
+    font-size: 0.8rem;
+}
+
+main p {
+    color: grey;
+}
+
+main textarea {
+    resize: none;
+}
+
+#description {
+    white-space: pre;
+    width: 1000px;
+    white-space: pre;
+    height: 200px;
+    text-wrap: wrap;
+    word-break: break-all;
+    font-size: 1rem;
+}

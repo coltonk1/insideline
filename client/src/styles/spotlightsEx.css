@@ -1,0 +1,140 @@
+main > input {
+    position: sticky;
+    display: block;
+    z-index: 8;
+    top: 80px;
+    border-radius: 50px;
+    padding: 15px 20px;
+    font-size: 20px;
+    width: 80%;
+    height: fit-content;
+    transition: 0.2s background, 0.2s box-shadow;
+    margin: auto;
+    margin-bottom: -55px;
+    box-shadow: inset 0 0 0 transparent, 3px 3px 10px 2px #80808050;
+    left: 0;
+    right: 0;
+}
+
+main > input:hover {
+    background: #ededed;
+}
+
+main > input:focus {
+    background: white;
+    box-shadow: inset 0 0 5px #505050;
+}
+
+.displayContainer {
+    margin-top: 60px;
+    column-gap: 20px;
+    columns: 4;
+    padding: 10px; /* Padding around the container */
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1500px;
+}
+
+/* Container for all items, using a grid layout */
+.displayItemS {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Ensure content does not overflow */
+    background-color: #fff; /* White background for the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+    height: auto;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.displayItemS:hover {
+    transform: scale(1.05); /* Slightly zoom in on hover */
+}
+
+/* Styling for the image container */
+.imgContainer {
+    width: 100%; /* Full width for the image container */
+    overflow: hidden; /* Hide overflow */
+}
+
+.imgContainer img {
+    width: 100%; /* Full width for the image */
+    height: 100%; /* Full height for the image */
+    object-fit: cover; /* Ensure the image covers the container */
+}
+
+/* Container for text and details */
+.infoContainer {
+    padding: 10px; /* Padding inside the info container */
+    box-sizing: border-box; /* Include padding in width calculations */
+    width: 100%;
+}
+
+/* Title styling */
+.infoContainer h1 {
+    font-size: 16px; /* Font size for the title */
+    font-weight: bold; /* Bold title */
+    margin: 0 0 10px 0; /* Space below the title */
+    color: #333; /* Dark color for the title */
+}
+
+/* Hide description */
+.infoContainer > p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    color: grey;
+    margin: 0;
+    margin-bottom: 10px;
+    text-wrap: nowrap;
+}
+
+/* Bottom section with user info and stats */
+.infoBottom {
+    display: flex;
+    justify-content: space-between; /* Space out the user info and stats */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between user info and stats */
+}
+
+/* Stats container styling */
+.stats {
+    display: flex;
+    gap: 10px; /* Space between stats items */
+    margin-right: 0;
+}
+
+.stats > div {
+    display: flex;
+    align-items: center; /* Align icon and text vertically */
+    gap: 5px; /* Space between icon and text */
+}
+
+.stats > div > p {
+    font-size: 14px;
+    width: fit-content;
+}
+
+.stats img {
+    width: 15px; /* Size of icons */
+    height: 15px; /* Size of icons */
+}
+@media (max-width: 850px) {
+    .displayContainer {
+        columns: 2 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .displayContainer {
+        columns: 1 !important;
+    }
+    .imgContainer {
+        max-height: 50vh;
+    }
+}

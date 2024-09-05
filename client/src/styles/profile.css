@@ -1,0 +1,248 @@
+main {
+    width: 100% !important;
+    padding: 20px 0;
+    max-width: 1220px;
+}
+
+.topInfo {
+    display: flex;
+    margin-top: 30px;
+}
+
+.userDisplay {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 0;
+    width: fit-content;
+}
+
+.userImage {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.userImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userDetails p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.statsContainer {
+    width: 70%;
+    display: flex;
+}
+
+.statsFollowing {
+    width: 100%;
+    display: flex;
+    flex: 0;
+    flex-direction: column;
+}
+
+.infoBottom {
+    width: fit-content;
+}
+
+.stats {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    margin-right: 0;
+}
+
+.statsFollowing > div {
+    display: flex;
+    gap: 5px;
+    margin: 0;
+}
+
+.stats > div {
+    display: block;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+.stats > div > p {
+    font-size: 15px;
+    display: block;
+    width: 70px;
+    margin: 0;
+}
+
+.stats > div > img {
+    margin: 0;
+}
+
+.stats > div > p:first-child,
+.statsFollowing > div > p:first-child {
+    font-size: 20px;
+    font-weight: bolder;
+}
+
+.statsFollowing > div > p:first-child {
+    font-size: 16px;
+}
+.userProfile {
+    width: 80%;
+    position: relative;
+}
+
+.userProfile > p {
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+
+.profileSelector {
+    display: flex;
+    width: 80%;
+}
+
+.profileSelector > div {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.profileSelector > div > img {
+    height: 100%;
+    opacity: 0.7;
+}
+
+.profileSelector > div.active {
+    background: #d5d5d5;
+    border-radius: 20px 20px 0 0;
+}
+
+.profileDataContainer {
+    position: relative;
+    margin-left: 0;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+}
+
+.profileData {
+    width: 100%;
+    max-height: 600px;
+    min-height: 200px;
+    overflow-y: scroll;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.profileDataContainer > #background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: auto;
+    margin-left: 0;
+    width: 100%;
+    height: 100%;
+
+    /* transform: translate(calc((-100vw + 1000px) / 2)); */
+    background: linear-gradient(to bottom, #d5d5d5, #e8e8e8 10px);
+
+    z-index: -1;
+    background-repeat: repeat;
+    background-size: 10px;
+}
+
+.follow-user {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.follow-user > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.profile_stats {
+    display: flex;
+    gap: 50px;
+    margin-left: 0;
+}
+
+.profile_stats > div > p {
+    text-align: center;
+}
+
+.profile_stats > div > p:first-child {
+    font-weight: bolder;
+}
+
+.profile-description {
+    white-space: pre;
+    max-height: 200px;
+    text-wrap: wrap;
+    word-break: break-all;
+    font-size: 1rem;
+}
+
+.add-description {
+    margin-top: 10px;
+    display: block;
+}
+
+.edit-profile {
+    position: absolute;
+    right: 0;
+    bottom: 25px;
+}
+
+.no-posts {
+    width: fit-content;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.no-posts > a {
+    color: #2439ae !important;
+}
+
+.no-posts > p {
+    display: inline;
+}
+
+@media (max-width: 830px) {
+    .mini-button.edit-profile {
+        top: -30px;
+        left: 0;
+        bottom: auto;
+    }
+    .topInfo {
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .topInfo > * {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .statsContainer {
+        flex-direction: column;
+        width: fit-content;
+        margin-right: 0;
+    }
+    .statsFollowing {
+        width: fit-content;
+    }
+    .profile_stats {
+        margin: auto;
+        display: none;
+    }
+}

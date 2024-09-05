@@ -1,0 +1,71 @@
+.options {
+    display: flex;
+    width: fit-content;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.purchase-option {
+    padding: 10px;
+    height: 230px;
+    width: 250px;
+    border-radius: 30px;
+    /* background: linear-gradient(to top left, #fafafa, #c74646 50%, #7d8bdb50 100%); */
+    background: linear-gradient(to bottom right, #e6e6e6, #e0e0e0);
+    box-shadow: 0 0 10px 3px #80808030;
+    display: block;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.purchase-option > .title {
+    font-weight: bold;
+    font-size: 2em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.purchase-option > .description {
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 0;
+    margin-bottom: auto;
+}
+
+.purchase-option > .description > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.purchase-option > .description > ul > li {
+    color: grey;
+    list-style-type: none;
+    font-size: 0.9rem;
+    margin-left: 0;
+    border-bottom: 2px solid #80808030;
+    width: 100%;
+}
+
+.purchase-option > .price-amt {
+    font-weight: bolder;
+    font-size: 1.5em;
+    margin-bottom: 0;
+    margin-left: 30px;
+    color: #3148c8;
+}
+
+.purchase-option .per-month {
+    color: grey;
+    font-weight: lighter;
+    font-size: 0.9rem;
+}
+
+.purchase-option > .lightSpecialButton {
+    margin-bottom: 0;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+}

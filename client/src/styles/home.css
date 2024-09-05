@@ -1,0 +1,356 @@
+body {
+    overflow-x: hidden;
+}
+
+main {
+    margin-top: auto !important;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0;
+    gap: 50px;
+}
+
+title {
+    font-weight: bold;
+    text-align: center;
+}
+
+main > section#main {
+    position: relative;
+    overflow: hidden;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 40px;
+    height: 450px;
+    background-color: #f0f0f0;
+    border-radius: 30px;
+    box-shadow: 5px 5px 10px 2px #80808050;
+    position: absolute;
+    z-index: 7;
+}
+
+main > section#main > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(120%) brightness(50%);
+}
+
+main > .main-search {
+    position: sticky;
+    display: block;
+    z-index: 8;
+    top: 80px;
+    width: 80%;
+    height: fit-content;
+    margin: auto;
+    margin-top: 230px;
+    margin-bottom: 200px;
+}
+
+main > .main-search > input {
+    box-shadow: inset 0 0 0 transparent, 3px 3px 10px 2px #80808050;
+    transition: 0.2s background, 0.2s box-shadow;
+    padding: 15px 20px;
+    font-size: 20px;
+    border-radius: 50px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main .left-input-image,
+main .right-input-image {
+    height: 30px;
+}
+
+main > section#main > title {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    display: block;
+    width: fit-content;
+    font-weight: bold;
+    font-size: clamp(12px, 4vw, 50px);
+    user-select: none;
+    color: white;
+}
+
+main > section#main > div {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+    position: absolute;
+    left: 110px;
+    top: 270px;
+    width: fit-content;
+}
+
+main > section#main > div > div {
+    background: white;
+    border-radius: 50px;
+    padding: 10px 20px;
+    user-select: none;
+    cursor: pointer;
+}
+
+main > section#main > div > div:hover {
+    background: #ededed;
+}
+
+main > section#main > div > div.active {
+    background: white;
+    box-shadow: inset 0 0 5px #505050;
+}
+
+main > section#recent {
+    position: relative;
+    height: fit-content;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+    align-items: flex-start;
+    margin-left: 10%;
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+main > section#recent > * {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+main > section#recent > #background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: auto;
+    width: 100vw;
+    background: #fafafa;
+    height: 100%;
+    margin-left: -10vw;
+    border-radius: 80px 80px 0 0;
+    box-shadow: inset 0 10px 10px #80808030, inset 0 -10px 10px #80808030;
+    z-index: -1;
+    background-image: url("../assets/pattern.png");
+    background-repeat: repeat;
+    background-size: 10px;
+}
+
+main > section#recent > title {
+    display: block;
+    font-size: 25px;
+    background: linear-gradient(to bottom right, #a110a1, #4059ed);
+    background-clip: text;
+    color: transparent;
+}
+
+main > section#recent > title > p {
+    font-weight: 500;
+    display: block;
+    font-size: 15px;
+    margin-bottom: -8px;
+    margin-top: -8px;
+    color: black;
+    background: black;
+    background-clip: text;
+}
+
+main .full-width {
+    max-width: 80vw;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: auto;
+}
+
+#recommendations {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding: 50px;
+    margin-top: -50px;
+}
+
+#recommendations > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* .displayItem:hover > div,
+.displayItem:hover > title {
+    opacity: 1;
+} */
+
+/* .displayItem > img {
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.imgContainer {
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: 0.2s;
+    margin-left: 0;
+    display: inline-block;
+    box-shadow: 5px 5px 10px 2px #80808050;
+} */
+
+/* .infoContainer > * {
+    display: block;
+}
+
+.infoContainer > title {
+    font-size: 1.2rem;
+} */
+
+/* .displayItem > div {
+    background: linear-gradient(to bottom, #0000 70%, #000a 90%, #000a);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.displayItem > title {
+    color: #ededed;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 5;
+    font-size: 18px;
+    display: block;
+    font-weight: bolder;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.displayItem > p {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgb(170, 6, 6);
+    border-radius: 50px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 5px 5px 10px 2px #50505050;
+} */
+
+footer {
+    margin-top: 0;
+}
+
+#changeCoordinates {
+    z-index: 400;
+    display: block;
+    position: absolute;
+    right: 0;
+}
+
+.leaflet-container {
+    z-index: 9;
+    display: block;
+}
+
+section#list {
+    position: absolute;
+    height: 100%;
+    width: 40%;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    backdrop-filter: blur(2px);
+}
+
+section#list > div {
+    width: 100%;
+    padding: 20px;
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+}
+
+.displayContainer {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-left: 0;
+    width: fit-content;
+    columns: 3 !important;
+    max-width: 1500px;
+}
+
+section#list .displayItem {
+    border-radius: 0;
+}
+
+main > section#map {
+    width: 100vw;
+    height: calc(100vh - 70px);
+    transform: translate(calc((-100vw + 1300px) / 2));
+    position: fixed;
+    top: 70px;
+    z-index: 9;
+}
+
+.displayContainerP {
+    width: fit-content;
+    max-width: 1500px;
+    justify-items: center;
+}
+
+.displayContainerP > * {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    /* Styles for screens smaller than 768px */
+    main > section#main {
+        border-radius: 0;
+        height: 250px;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+        margin-left: 0;
+        width: 100%;
+        margin-top: 0;
+    }
+
+    main > section#main > img {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    main > section#main > title {
+        font-size: 2rem;
+        width: 100%;
+        top: 40px;
+        text-align: center;
+    }
+    main > section#recent {
+        width: 100vw;
+        margin-left: 0;
+    }
+    main > section#recent > #background {
+        border-radius: 0;
+        margin-left: 0;
+    }
+    main > .main-search {
+        margin-top: 130px;
+        margin-bottom: 10px;
+    }
+}

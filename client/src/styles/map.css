@@ -1,0 +1,204 @@
+body {
+    overflow-x: hidden;
+}
+
+#changeCoordinates {
+    z-index: 500;
+    display: block;
+    position: absolute;
+    left: 50px;
+    top: 10px;
+    width: calc(100% - 725px);
+}
+
+#changeCoordinates > input {
+    height: 35px;
+    width: 100%;
+    padding: 5px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+}
+
+.leaflet-container {
+    z-index: 9;
+    display: block;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 20px;
+    width: fit-content;
+}
+
+.leaflet-popup-content {
+    margin: auto;
+    display: flex;
+    width: fit-content !important;
+    gap: 30px;
+}
+.leaflet-popup-content > .imgContainer {
+    border-radius: 8px;
+    width: 150px;
+    min-width: 150px;
+    height: 150px;
+    box-shadow: 0 0 5px 3px #80808050;
+    overflow: hidden;
+    position: relative;
+    display: block;
+}
+.leaflet-popup-content > .imgContainer > img {
+    position: absolute;
+    display: block;
+    height: 100%;
+    left: 50%;
+    transform: translate(-50%);
+    top: 0;
+    bottom: 0;
+}
+.leaflet-popup-content > .listingInfo {
+    display: block;
+    min-width: 200px;
+}
+.leaflet-popup-content > .listingInfo * {
+    height: fit-content;
+    margin: auto;
+    margin-left: 0;
+}
+.leaflet-popup-content > .listingInfo > * {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.listingInfo > .post-info {
+    max-width: 230px;
+    overflow-y: hidden;
+}
+
+section#list {
+    position: absolute;
+    height: 100%;
+    width: 625px;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    backdrop-filter: blur(2px) brightness(90%);
+}
+
+section#list > div {
+    width: 100%;
+    padding: 20px;
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+section#list .displayContainer {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin-left: 0;
+    width: 95%;
+}
+
+section#list .displayItem {
+    border-radius: 0;
+}
+
+main > section#map {
+    width: 100vw;
+    height: calc(100vh - 90px);
+    position: fixed;
+    top: 90px;
+    left: 0;
+    z-index: 9;
+}
+
+.displayItem {
+    display: flex;
+    align-items: center; /* Vertically center the content */
+    gap: 15px; /* Space between the image and the rest of the content */
+    padding: 10px; /* Padding inside the container */
+    border: 1px solid #ddd; /* Light border */
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    width: 100%;
+}
+
+.displayItem > img {
+    margin-left: 20px;
+    margin-right: 0;
+    width: 120px; /* Fixed width for the image */
+    height: 120px; /* Fixed height for the image to make it square */
+    border-radius: 8px; /* Rounded corners for the image */
+    object-fit: cover; /* Ensure the image covers the entire area without distortion */
+}
+
+.listingInfo {
+    margin-left: 0;
+    display: flex;
+    flex-direction: column; /* Stack the content vertically */
+    gap: 10px; /* Space between items */
+}
+
+.listingInfo > title {
+    margin-left: 0;
+    font-size: 20px; /* Larger font size for the price */
+    font-weight: bold; /* Bold text for the price */
+    color: #333; /* Darker color for visibility */
+    margin-bottom: 5px; /* Space below the price */
+}
+
+.listingInfo > div {
+    margin-left: 0;
+    display: flex;
+    gap: 15px; /* Space between each stat item */
+}
+
+.listingInfo > div > div {
+    font-size: 13px;
+    color: grey;
+    margin-left: 0;
+    text-align: center; /* Center the text in each stat block */
+}
+
+.listingInfo > div:last-of-type {
+    margin-top: 5px; /* Space above the address */
+    font-size: 14px; /* Smaller font size for the address */
+    color: #666; /* Lighter color for the address */
+}
+
+.userDisplay {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+
+.userImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.userImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.userDetails p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.viewdetails {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+}
+
+@media (max-width: 1050px) {
+    section#list {
+        display: none;
+    }
+}

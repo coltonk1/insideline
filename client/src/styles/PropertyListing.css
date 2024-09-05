@@ -1,0 +1,221 @@
+/* src/PropertyListing.css */
+.property-listing {
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.property-image-gallery {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.main-image img.square-image {
+    width: 600px;
+    height: 400px;
+    object-fit: cover;
+    border: 2px solid grey;
+}
+
+.image-previews {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    max-width: 800px;
+    width: fit-content;
+    overflow-x: scroll;
+}
+
+.image-previews img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.image-previews img:hover {
+    border-color: #888;
+}
+
+.property-details {
+    padding: 20px;
+}
+
+.price-section {
+    margin-bottom: 20px;
+}
+
+.price-section h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #333;
+}
+
+.price-section p {
+    margin: 5px 0 15px;
+    font-size: 18px;
+    color: #555;
+}
+
+.property-stats {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.property-address {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.tags-section {
+    margin-bottom: 20px;
+}
+
+.tags-section button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tags {
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.property-description p {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 15;
+}
+
+.modal-content {
+    width: 80vw;
+    height: 80vh;
+    max-width: 80vw;
+    max-height: 80vh;
+}
+
+.modal-content img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.edit-post-container {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 10px;
+    margin-right: 0;
+}
+
+.remove-post {
+    color: red;
+    padding: 4px 15px;
+    border-radius: 50px;
+    transition: 0.2s;
+}
+
+.remove-post:hover {
+    color: white;
+    background: red;
+}
+
+.edit-post {
+    background: #657bf8;
+    padding: 4px 15px;
+    border-radius: 50px;
+    color: white;
+    transition: 0.2s;
+}
+
+.edit-post:hover {
+    background: #4b5ec7;
+    color: white;
+}
+
+.top-container {
+    display: flex;
+}
+
+#soldPopup {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: fit-content;
+    width: fit-content;
+    padding: 20px;
+    border: 2px solid grey;
+    border-radius: 12px;
+    background: white;
+    box-shadow: inset 0 0 10px 3px #80808030;
+}
+
+#soldPopup > div {
+    display: flex;
+    flex-direction: column;
+}
+
+#soldPopup input {
+    border: 2px solid grey;
+}
+
+.sold-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.map-not-found {
+    text-align: center;
+    padding-top: 200px;
+    padding-bottom: 200px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-image: url("../assets/blurred_map.png");
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .main-image img.square-image {
+        width: 100vw;
+        height: 40vh;
+        border-radius: 0;
+    }
+    .edit-post-container {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,108 @@
+main {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+main > div {
+    width: fit-content;
+    position: relative;
+}
+
+label {
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    color: grey;
+    pointer-events: none;
+    height: fit-content;
+    font-size: 15px;
+    transition: 0.2s ease-in-out;
+}
+
+main input {
+    width: 400px;
+    outline: none;
+    padding: 12px 30px;
+    border-radius: 35px;
+    border: none;
+    background: #f3f3f3;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #303035;
+    box-sizing: border-box;
+}
+
+main input::placeholder {
+    color: transparent;
+}
+
+#wrapper > div > .errorMessage {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: red;
+}
+
+#wrapper > div > p:not(.errorMessage) {
+    left: 10px;
+    bottom: 0;
+    position: absolute;
+}
+
+#wrapper > form > div:has(input:not(:placeholder-shown)) label {
+    top: -60px;
+    font-size: 14px;
+    transition: 0.15s ease-in-out;
+}
+
+#wrapper p {
+    text-align: center;
+    width: 500px;
+    max-width: 80vw;
+}
+
+form p {
+    margin-top: 15px;
+}
+
+.error {
+    color: red;
+}
+
+.message > p > *,
+.message * {
+    display: inline-block;
+    width: fit-content !important;
+    white-space: pre;
+}
+
+form {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+form > div {
+    position: relative;
+}
+
+@media (max-width: 600px) {
+    main {
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    main input {
+        width: 100%;
+    }
+    main > form {
+        width: 100%;
+    }
+    main > form > div {
+        width: 100%;
+    }
+}

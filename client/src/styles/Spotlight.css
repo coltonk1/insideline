@@ -1,0 +1,360 @@
+/* src/Spotlight.css */
+.spotlight-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 20px auto;
+    border-radius: 8px;
+    background-color: #fff;
+    position: relative;
+}
+
+.spotlight {
+    flex: 3;
+    padding: 20px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.author-info > * {
+    margin-left: 0;
+}
+
+.author-details > * {
+    margin-left: 0;
+}
+
+.spotlight-image {
+    position: relative;
+    height: 300px;
+    width: 600px;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.spotlight-image .image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.image-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+    width: fit-content;
+    margin-top: 25px;
+}
+
+.preview-image {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.spotlight-description p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.spotlight-comments {
+    flex: 2;
+    padding: 20px;
+    border-left: 1px solid #ddd;
+}
+
+.spotlight-comments h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.comment-input {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.comment-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.comment-input button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-list {
+    list-style-type: none;
+    padding: 0;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+.comment-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.reply-item {
+    margin-left: 20px;
+}
+
+.comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0;
+    margin-top: 15px;
+}
+
+.comment-username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.comment-displayname {
+    font-size: 12px;
+    color: #777;
+    margin: 0;
+}
+
+.comment-text {
+    font-size: 14px;
+    color: #555;
+    margin-left: 0;
+    word-wrap: break-word;
+    width: 300px;
+    max-height: 98px;
+    overflow: hidden;
+    font-family: monospace;
+}
+
+.reply-button {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.reply-list {
+    list-style-type: none;
+    padding: 0;
+    padding-left: 40px; /* Indent replies */
+}
+
+.reply-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Image Preview Overlay */
+.image-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.image-preview {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+}
+
+.spotlight-image-container {
+    height: fit-content;
+}
+
+.spotlight-title {
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.like-share-container {
+    width: fit-content;
+    margin-right: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-right: 10px;
+}
+
+.like-share-container > div {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.like-share-container > div > img {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    filter: saturate(0%);
+    transition: 0.1s;
+}
+
+.liked {
+    filter: saturate(100%) !important;
+    animation: beat 1s ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+@keyframes beat {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.edit-post-container {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    gap: 10px;
+    margin-right: 0;
+}
+
+.remove-post {
+    color: red;
+    padding: 4px 15px;
+    border-radius: 50px;
+    transition: 0.2s;
+}
+
+.remove-post:hover {
+    color: white;
+    background: red;
+}
+
+.edit-post {
+    background: #657bf8;
+    padding: 4px 15px;
+    border-radius: 50px;
+    color: white;
+    transition: 0.2s;
+}
+
+.edit-post:hover {
+    background: #4b5ec7;
+    color: white;
+}
+
+.top-container {
+    display: flex;
+}
+
+.s-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: fit-content;
+    height: fit-content;
+}
+
+/* Modal Content */
+.s-modal-content {
+    background-color: #fefefe;
+    padding: 30px 50px;
+    border: 1px solid #888;
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: fit-content;
+    height: fit-content;
+    cursor: auto;
+    border-radius: 8px;
+}
+
+.s-modal-content > * {
+    display: block;
+    width: fit-content;
+    height: fit-content;
+}
+
+.s-modal-content > p > a {
+    user-select: auto;
+}
+
+/* The Close Button */
+.s-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 7px;
+}
+
+.s-close:hover,
+.s-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#copyButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+}

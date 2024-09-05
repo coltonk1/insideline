@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="69.751785mm"
+   height="30.485968mm"
+   viewBox="0 0 69.751785 30.485968"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm" /><defs
+     id="defs1"><linearGradient
+       id="linearGradient29"
+       inkscape:collect="always"><stop
+         style="stop-color:#4059ed;stop-opacity:1;"
+         offset="0"
+         id="stop29" /><stop
+         style="stop-color:#7b48ed;stop-opacity:1;"
+         offset="1"
+         id="stop30" /></linearGradient><linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient29"
+       id="linearGradient30"
+       x1="66.354645"
+       y1="75.041595"
+       x2="136.10645"
+       y2="75.041595"
+       gradientUnits="userSpaceOnUse" /></defs><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-66.354646,-59.798617)"><path
+       id="path29"
+       style="fill:url(#linearGradient30);fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linecap:round;stroke-dasharray:none"
+       d="M 88.85766,59.798613 66.354645,82.301632 74.151069,80.212354 V 90.2722 c 0,0 9.538891,-2.23365 14.395501,-2.24895 4.85847,-0.01527 14.01218,2.02572 14.75364,2.19263 0.0186,0.004 0.14955,0.03189 0.15709,0.03359 0.005,0.0011 0.10439,0.02273 0.10439,0.02273 V 90.22621 80.218038 l 7.80728,2.091862 -6.99596,-6.995955 z m 27.40558,3.624585 -9.76943,9.768913 0.0656,0.06563 c 2.53368,3.332672 4.50521,6.436808 7.02644,9.690364 0.11663,0.150494 0.51391,0.566188 0.43977,0.731739 -0.0686,0.153196 -0.83846,0.02236 -1.03921,0.0072 -2.15153,-0.16214 -4.23205,-0.381353 -6.45542,-0.667659 l -0.0739,-0.02532 0.10542,6.593394 c 2.83227,-0.56816 6.85984,-1.27711 9.42682,-1.28519 4.46099,-0.014 13.23536,1.98231 13.23536,1.98231 v -8.862511 l 6.88175,1.844332 z" /></g></svg>
