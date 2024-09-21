@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/stripe/stripe-go/v79"
@@ -9,7 +10,8 @@ import (
 	checkout "github.com/stripe/stripe-go/v79/checkout/session"
 	"github.com/stripe/stripe-go/v79/customer"
 	"github.com/stripe/stripe-go/v79/invoice"
-	"github.com/stripe/stripe-go/v79/paymentmethod"
+	"github.com/stripe/stripe-go/v79/plan"
+	"github.com/stripe/stripe-go/v79/product"
 	"github.com/stripe/stripe-go/v79/subscription"
 )
 
@@ -173,7 +175,7 @@ func upcomingInvoice(w http.ResponseWriter, r *http.Request) {
     }
 
     customerParams := &stripe.CustomerParams{}
-    cust, err = customer.Get(customerID, customerParams)
+    _, err = customer.Get(customerID, customerParams)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -192,6 +194,17 @@ func upcomingInvoice(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNotFound)
         return
 	}
+
+    planID := sub.Items.Data[0].Plan.ID
+    plan_, err := plan.Get(planID, nil)
+    if err != nil {
+        log.Fatalf("Failed to retrieve plan: %v", err)
+    }
+
+    prod, err := product.Get(plan_.Product.ID, nil)
+    if err != nil {
+        log.Fatalf("Failed to retrieve product: %v", err)
+    }
 
     invoice_params := &stripe.InvoiceUpcomingParams{
         Customer: stripe.String(customerID),
@@ -217,6 +230,8 @@ func upcomingInvoice(w http.ResponseWriter, r *http.Request) {
         AmountRemaining int64  `json:"amount_remaining"`
         DueDate         int64  `json:"due_date"`
         AutoCharge      string `json:"auto_charge"`
+        SubName         string  `json:"subscription_name"`
+        SubId           string  `json:"sub_id"`
     }
 
     details := InvoiceDetails{
@@ -227,169 +242,171 @@ func upcomingInvoice(w http.ResponseWriter, r *http.Request) {
         AmountRemaining: invoice.AmountRemaining,
         DueDate:         sub.CurrentPeriodEnd,
         AutoCharge:      string(invoice.CollectionMethod),
+        SubName:         prod.Name,
+        SubId:           prod.ID,
     }
 
     json.NewEncoder(w).Encode(details)
 }
 
-func createCustomer(w http.ResponseWriter, r *http.Request) {
-	if handleCORS(w, r) {
-        return
-    }
+// func createCustomer(w http.ResponseWriter, r *http.Request) {
+// 	if handleCORS(w, r) {
+//         return
+//     }
 
-    var req struct {
-        Email string `json:"email"`
-    }
-    _ = json.NewDecoder(r.Body).Decode(&req)
+//     var req struct {
+//         Email string `json:"email"`
+//     }
+//     _ = json.NewDecoder(r.Body).Decode(&req)
 
-    newCustomer, err := customer.New(&stripe.CustomerParams{
-        Email: stripe.String(req.Email),
-    })
+//     newCustomer, err := customer.New(&stripe.CustomerParams{
+//         Email: stripe.String(req.Email),
+//     })
 
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+//     if err != nil {
+//         http.Error(w, err.Error(), http.StatusInternalServerError)
+//         return
+//     }
 
-    json.NewEncoder(w).Encode(newCustomer)
-}
+//     json.NewEncoder(w).Encode(newCustomer)
+// }
 
-func updateSubscription(w http.ResponseWriter, r *http.Request) {
-	if handleCORS(w, r) {
-        return
-    }
+// func updateSubscription(w http.ResponseWriter, r *http.Request) {
+// 	if handleCORS(w, r) {
+//         return
+//     }
 
-    var req struct {
-        CustomerID string `json:"customer_id"`
-        PriceID    string `json:"price_id"`
-    }
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        http.Error(w, "Invalid request body", http.StatusBadRequest)
-        return
-    }
+//     var req struct {
+//         CustomerID string `json:"customer_id"`
+//         PriceID    string `json:"price_id"`
+//     }
+//     if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+//         http.Error(w, "Invalid request body", http.StatusBadRequest)
+//         return
+//     }
 
-    // Fetch existing subscriptions for the customer
-    params := &stripe.SubscriptionListParams{
-        Customer: stripe.String(req.CustomerID),
-    }
-    params.SetStripeAccount(r.Header.Get("Stripe-Account"))
-    subs := subscription.List(params)
+//     // Fetch existing subscriptions for the customer
+//     params := &stripe.SubscriptionListParams{
+//         Customer: stripe.String(req.CustomerID),
+//     }
+//     params.SetStripeAccount(r.Header.Get("Stripe-Account"))
+//     subs := subscription.List(params)
 
-    for subs.Next() {
-        sub := subs.Subscription()
-        if sub.Status == stripe.SubscriptionStatusIncomplete ||
-            sub.Status == stripe.SubscriptionStatusPastDue ||
-            sub.Status == stripe.SubscriptionStatusUnpaid {
-            json.NewEncoder(w).Encode(map[string]string{"status": "existing_subscription", "subscription_id": sub.ID})
-            return
-        }
-    }
-    if err := subs.Err(); err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+//     for subs.Next() {
+//         sub := subs.Subscription()
+//         if sub.Status == stripe.SubscriptionStatusIncomplete ||
+//             sub.Status == stripe.SubscriptionStatusPastDue ||
+//             sub.Status == stripe.SubscriptionStatusUnpaid {
+//             json.NewEncoder(w).Encode(map[string]string{"status": "existing_subscription", "subscription_id": sub.ID})
+//             return
+//         }
+//     }
+//     if err := subs.Err(); err != nil {
+//         http.Error(w, err.Error(), http.StatusInternalServerError)
+//         return
+//     }
 
-    // Cancel active subscriptions
-    params.Status = stripe.String(string(stripe.SubscriptionStatusActive))
-    subs = subscription.List(params)
-    for subs.Next() {
-        sub := subs.Subscription()
-        _, err := subscription.Cancel(sub.ID, &stripe.SubscriptionCancelParams{})
-        if err != nil {
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
-    }
-    if err := subs.Err(); err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+//     // Cancel active subscriptions
+//     params.Status = stripe.String(string(stripe.SubscriptionStatusActive))
+//     subs = subscription.List(params)
+//     for subs.Next() {
+//         sub := subs.Subscription()
+//         _, err := subscription.Cancel(sub.ID, &stripe.SubscriptionCancelParams{})
+//         if err != nil {
+//             http.Error(w, err.Error(), http.StatusInternalServerError)
+//             return
+//         }
+//     }
+//     if err := subs.Err(); err != nil {
+//         http.Error(w, err.Error(), http.StatusInternalServerError)
+//         return
+//     }
 
-    // Create a new subscription
-    newSubParams := &stripe.SubscriptionParams{
-        Customer:         stripe.String(req.CustomerID),
-        Items:            []*stripe.SubscriptionItemsParams{{Price: stripe.String(req.PriceID)}},
-        CollectionMethod: stripe.String(string(stripe.InvoiceCollectionMethodSendInvoice)),
-    }
-    newSubParams.SetIdempotencyKey(req.CustomerID + "-" + req.PriceID)
-    newSub, err := subscription.New(newSubParams)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+//     // Create a new subscription
+//     newSubParams := &stripe.SubscriptionParams{
+//         Customer:         stripe.String(req.CustomerID),
+//         Items:            []*stripe.SubscriptionItemsParams{{Price: stripe.String(req.PriceID)}},
+//         CollectionMethod: stripe.String(string(stripe.InvoiceCollectionMethodSendInvoice)),
+//     }
+//     newSubParams.SetIdempotencyKey(req.CustomerID + "-" + req.PriceID)
+//     newSub, err := subscription.New(newSubParams)
+//     if err != nil {
+//         http.Error(w, err.Error(), http.StatusInternalServerError)
+//         return
+//     }
 
-    json.NewEncoder(w).Encode(map[string]string{"status": "success", "subscription_id": newSub.ID})
-}
+//     json.NewEncoder(w).Encode(map[string]string{"status": "success", "subscription_id": newSub.ID})
+// }
 
-func updatePaymentMethod(w http.ResponseWriter, r *http.Request) {
-	if handleCORS(w, r) {
-        return
-    }
+// func updatePaymentMethod(w http.ResponseWriter, r *http.Request) {
+// 	if handleCORS(w, r) {
+//         return
+//     }
 
-	var req struct {
-		CustomerID      string `json:"customer_id"`
-		PaymentMethodID string `json:"payment_method_id"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
-	}
+// 	var req struct {
+// 		CustomerID      string `json:"customer_id"`
+// 		PaymentMethodID string `json:"payment_method_id"`
+// 	}
+// 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+// 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+// 		return
+// 	}
 
-	// Attach the new payment method to the customer
-	_, err := paymentmethod.Attach(req.PaymentMethodID, &stripe.PaymentMethodAttachParams{
-		Customer: stripe.String(req.CustomerID),
-	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// 	// Attach the new payment method to the customer
+// 	_, err := paymentmethod.Attach(req.PaymentMethodID, &stripe.PaymentMethodAttachParams{
+// 		Customer: stripe.String(req.CustomerID),
+// 	})
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Update the customer's default payment method
-	_, err = customer.Update(req.CustomerID, &stripe.CustomerParams{
-		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
-			DefaultPaymentMethod: stripe.String(req.PaymentMethodID),
-		},
-	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// 	// Update the customer's default payment method
+// 	_, err = customer.Update(req.CustomerID, &stripe.CustomerParams{
+// 		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
+// 			DefaultPaymentMethod: stripe.String(req.PaymentMethodID),
+// 		},
+// 	})
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+// }
 
-func retryPayment(w http.ResponseWriter, r *http.Request) {
-	if handleCORS(w, r) {
-        return
-    }
+// func retryPayment(w http.ResponseWriter, r *http.Request) {
+// 	if handleCORS(w, r) {
+//         return
+//     }
 
-	var req struct {
-		SubscriptionID string `json:"subscription_id"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
-	}
+// 	var req struct {
+// 		SubscriptionID string `json:"subscription_id"`
+// 	}
+// 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+// 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+// 		return
+// 	}
 
-	// Retrieve the latest invoice for the subscription
-	subs, err := subscription.Get(req.SubscriptionID, nil)
-	if err != nil {
-		// Handle the error
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// 	// Retrieve the latest invoice for the subscription
+// 	subs, err := subscription.Get(req.SubscriptionID, nil)
+// 	if err != nil {
+// 		// Handle the error
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	// Retrieve the latest invoice ID from the subscription
-	invoiceID := subs.LatestInvoice.ID
+// 	// Retrieve the latest invoice ID from the subscription
+// 	invoiceID := subs.LatestInvoice.ID
 
-	// Attempt to pay the invoice
-	_, err = invoice.Pay(invoiceID, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// 	// Attempt to pay the invoice
+// 	_, err = invoice.Pay(invoiceID, nil)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
-}
+// 	w.WriteHeader(http.StatusOK)
+// 	json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+// }

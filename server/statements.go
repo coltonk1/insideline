@@ -50,7 +50,7 @@ var statements = []string{
 	/*31*/ "UPDATE posts SET likes_for_week[EXTRACT(WEEK FROM CURRENT_DATE)::int - 1] = likes_for_week[EXTRACT(WEEK FROM CURRENT_DATE)::int - 1] + 1 WHERE post_uuid = $1;",
 	/*32*/ "UPDATE posts SET likes_for_week[EXTRACT(WEEK FROM CURRENT_DATE)::int - 1] = likes_for_week[EXTRACT(WEEK FROM CURRENT_DATE)::int - 1] - 1 WHERE post_uuid = $1;",
 	/*33*/ "SELECT title, image_urls, post_uuid, author_uuid, likes, comments, description, payload, (similarity(title, $1) * 3 + similarity(author_username, $1) * 2 + similarity(description, $1)) AS similarity_score FROM posts WHERE (similarity(title, $1) + similarity(author_username, $1) + similarity(description, $1)) > 0.25 AND type = $2 AND private = false ORDER BY similarity_score DESC LIMIT 20;",
-	/*34*/ "UPDATE posts SET title = $1, description = $2, image_urls = $3, private = $4, payload = $5 WHERE post_uuid = $6 AND author_uuid = $7",
+	/*34*/ "UPDATE posts SET title = $1, description = $2, image_urls = $3, private = $4, payload = $5, type = $8 WHERE post_uuid = $6 AND author_uuid = $7",
 	/*35*/ "UPDATE posts SET payload = jsonb_set(payload, '{price}', to_jsonb(($1::numeric)::text), false), type = 1 WHERE post_uuid = $2 AND author_uuid = $3",
 	/*36*/ "UPDATE users SET user_type = $1 WHERE user_uuid = $2",
 	/*37*/ "SELECT email FROM users WHERE user_uuid = $1 LIMIT 1",
@@ -58,6 +58,6 @@ var statements = []string{
 	/*39*/ "UPDATE users SET subscription_id = $1 WHERE user_uuid = $2",
 	/*40*/ "SELECT EXISTS (SELECT 1 FROM posts WHERE author_uuid = $1)",
 	/*41*/ "SELECT COUNT(*) FROM posts WHERE author_uuid = $1 AND type = $2 AND private = false",
-	/*42*/ "SELECT user_uuid FROM users WHERE email = $1 OR username = $1 AND user_type = 0",
-	/*43*/ "SELECT email FROM users WHERE email = $1 OR username = $1 AND user_type = 0",
+	/*42*/ "SELECT user_uuid FROM users WHERE (email = $1 OR username = $1) AND user_type = 0",
+	/*43*/ "SELECT email FROM users WHERE (email = $1 OR username = $1) AND user_type = 0",
 }

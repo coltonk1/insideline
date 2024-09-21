@@ -14,8 +14,8 @@ require (
 )
 
 require (
-	github.com/resend/resend-go/v2 v2.11.0 // indirect
-	github.com/stretchr/testify v1.8.2 // indirect
-	github.com/stripe/stripe-go v70.15.0+incompatible // indirect
-	github.com/stripe/stripe-go/v79 v79.8.0 // indirect
+	github.com/resend/resend-go/v2 v2.11.0
+	github.com/stripe/stripe-go/v79 v79.8.0
 )
+
+require github.com/joho/godotenv v1.5.1

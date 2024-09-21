@@ -1,3 +1,4 @@
+// This is the main package...
 package main
 
 import (
@@ -10,12 +11,14 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	"github.com/lib/pq"
 	"github.com/resend/resend-go/v2"
 	"github.com/stripe/stripe-go/v79"
@@ -323,6 +326,9 @@ func createToken(user_uuid string, username string, email string) (string, error
 }
 
 func getTokenPayload(tokenString string) (jwt.MapClaims, error) {
+    if !verifyToken(tokenString) {
+        return nil, fmt.Errorf("invalid token")
+    }
     token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
     if err != nil {
         return nil, err
@@ -406,13 +412,15 @@ func updatePost(w http.ResponseWriter, r *http.Request) {
 
 	if(requestBody.Type == 0) {
 		updatePropertyPost(w, r, UserUUID, requestBody);
+    } else if requestBody.Type == 1 {
+		updatePropertyPost(w, r, UserUUID, requestBody);
 	} else if(requestBody.Type == 2) {
 		updateSpotlightPost(w, r, UserUUID, requestBody);
 	}
 }
 
 func updatePropertyPost(w http.ResponseWriter, r *http.Request, UserUUID string, requestBody updateRequestBody) {
-	// /*34*/ "UPDATE posts SET title = $1, description = $2, image_urls = $3, private = $4, payload = $5 WHERE post_uuid = $6 AND author_uuid = $7",
+	// /*34*/ "UPDATE posts SET title = $1, description = $2, image_urls = $3, private = $4, payload = $5, type = $8 WHERE post_uuid = $6 AND author_uuid = $7",
     var imageUrlStrings []string
 	for _, value := range requestBody.ImageUrls {
 		imageUrlStrings = append(imageUrlStrings, value.Src)
@@ -426,6 +434,7 @@ func updatePropertyPost(w http.ResponseWriter, r *http.Request, UserUUID string,
 		requestBody.Payload,
 		requestBody.PostUuid,
         UserUUID,
+        requestBody.Type,
 	)
 
     if err != nil {
@@ -1530,11 +1539,14 @@ func returnBasic(w http.ResponseWriter, r *http.Request) {
 
 
 func initDB() {
-    // dbstring := "password=1295 dbname=postgres" // development
-    dbstring := "password=Colt1295! dbname=insidelinedb" // build
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+    
+    dbstring := os.Getenv("POSTGRES_STRING")
 
-    var err error
-    connStr := "user=postgres " + dbstring + " sslmode=disable"
+    connStr := dbstring + " sslmode=disable"
     db, err = sql.Open("postgres", connStr)
     if err != nil {
         log.Fatal(err)
@@ -1580,6 +1592,8 @@ func cacheControlFileServer(fs http.Handler) http.Handler {
 }
 
 func handleFuncs() {
+    // consider using "github.com/gorilla/mux"
+
     // http.HandleFunc("/", returnBasic)
     // Public user data : UserID, specific info (all, name, houses, ...)
     http.HandleFunc("/publicUserData", publicUserData)
@@ -1678,11 +1692,11 @@ type SubDetails struct {
 }
 
 var SubMap = map[string]SubDetails{
-    "prod_Ql4uPlQOWQuGQy": {Listings: 1},
-    "prod_Ql4udLUWeBqwN2": {Listings: 4},
-    "prod_Ql4vhF1VbZSrSw": {Listings: 10},
-    "prod_Ql4vbHlnADlhym": {Listings: 20},
-    "prod_Ql4vrTOnXUaBgv": {Listings: 350},
+    "prod_Ql4uPlQOWQuGQy": {Listings: 3}, // $10
+    "prod_Ql4udLUWeBqwN2": {Listings: 10}, // $25
+    "prod_Ql4vhF1VbZSrSw": {Listings: 25}, // $50
+    "prod_Ql4vbHlnADlhym": {Listings: 50}, // $100
+    "prod_Ql4vrTOnXUaBgv": {Listings: 600}, // $1000
 }
 
 func GetUserSubscription(email string) (string, string, error) {
@@ -1774,8 +1788,15 @@ func sendEmail(user_email string) (bool, error) {
 }
 
 func main() {
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+    
+    resend_key := os.Getenv("RESEND_KEY")
+
     ctx = context.TODO()
-    client = resend.NewClient("re_RLS1A7JS_87DbCSN4ZxF5JvximWD3A1Lc")
+    client = resend.NewClient(resend_key)
 
     initDB()
     defer closeDB()

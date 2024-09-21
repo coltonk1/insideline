@@ -1,22 +1,44 @@
 .options {
     display: flex;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 50px;
+    padding-top: 50px;
     width: fit-content;
-    gap: 25px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
+.options::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
+}
+
 .purchase-option {
+    transition: transform 0.2s;
     padding: 10px;
     height: 230px;
-    width: 250px;
+    width: 220px;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
     border-radius: 30px;
     /* background: linear-gradient(to top left, #fafafa, #c74646 50%, #7d8bdb50 100%); */
-    background: linear-gradient(to bottom right, #e6e6e6, #e0e0e0);
-    box-shadow: 0 0 10px 3px #80808030;
+    background: linear-gradient(to bottom right, #fbfbfb, #ffffff);
+    box-shadow: 0 0 3px 1px #80808050;
     display: block;
     position: relative;
     display: flex;
     flex-direction: column;
+    transition: 0.2s;
+}
+
+.active-option {
+    /* transform: scale(1.1); */
+    box-shadow: 0 0 3px 1px #3148c8;
+}
+
+.your-plan {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.7;
 }
 
 .purchase-option > .title {

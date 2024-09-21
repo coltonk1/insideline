@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/lib/pq"
 )
@@ -53,9 +54,6 @@ type Response struct {
     Status  string  `json:"status"`
 }
 
-
-
-
 type Position struct {
 	Left	float32		`json:"left"`
 	Top		float32		`json:"top"`
@@ -67,7 +65,7 @@ type Image struct {
 	Pos			Position	`json:"position"`
 }
 
-var requestBody struct {
+type CreatePostBody struct {
 	Title           string         `json:"title"`
 	Description     string         `json:"description"`
 	Token           string         `json:"token"`
@@ -83,65 +81,43 @@ func createPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		sendJSONResponse(w, false, "Unable to read request body", http.StatusInternalServerError)
-		return
-	}
+	var req_body CreatePostBody
 
-	// Print the body
-	fmt.Println("Request Body:", string(body))
-
-	if err := json.Unmarshal(body, &requestBody); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&req_body); err != nil {
 		sendJSONResponse(w, false, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	token_data, err := getTokenPayload(requestBody.Token)
-	if err != nil {
-		sendJSONResponse(w, false, "Invalid request body", http.StatusBadRequest)
+	if err := validateCreatePostBody(req_body); err != nil {
+		sendJSONResponse(w, false, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if(requestBody.Type == 0) {
-		prod_id, _, err := GetUserSubscription(token_data["email"].(string))
-		var listings int;
-		if err != nil {
-			listings = 0;
-		} else {
-			listings = SubMap[prod_id].Listings
-		}
-		// /*41*/ "SELECT COUNT(*) FROM posts WHERE author_uuid = $1 AND type = $2",
-		var amt int;
-		preparedStatements[41].QueryRow(token_data["user_uuid"].(string), 0).Scan(&amt)
-		
-		if(listings < amt) {
-			sendJSONResponse(w, false, fmt.Sprintf("Already at listing limit of %d", listings), http.StatusBadRequest)
-			return
-		}
-		createPropertyPost(w, r, body);
-	} else if(requestBody.Type == 2) {
-		createSpotlightPost(w, r, body);
-	}
+	switch req_body.Type {
+		case 0:
+			createPropertyPost(w, req_body)
+		case 1:
+			createPropertyPost(w, req_body)
+		case 2:
+			createSpotlightPost(w, req_body)
+    }
 }
 
-func createSpotlightPost(w http.ResponseWriter, r *http.Request, body []byte) {
-	token_data, err := getTokenPayload(requestBody.Token)
+func createSpotlightPost(w http.ResponseWriter, req_body CreatePostBody) {
+	token_data, err := getTokenPayload(req_body.Token)
 	if err != nil {
 		sendJSONResponse(w, false, "Internal error"+string(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	log.Println("Creating post?")
-
-	var imageUrlStrings []string
-	for _, value := range requestBody.ImageUrls {
-		imageUrlStrings = append(imageUrlStrings, value.Src)
+	imageUrlStrings := make([]string, len(req_body.ImageUrls))
+	for i, value := range req_body.ImageUrls {
+		imageUrlStrings[i] = value.Src
 	}
 
 	// /*25*/ "INSERT INTO posts (title, description, author_username, author_uuid, image_urls, type, private, realty_group_name, payload) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING post_uuid",
 	var uuid string;
-	err = preparedStatements[25].QueryRow(requestBody.Title, requestBody.Description, token_data["username"], token_data["user_uuid"], pq.Array(imageUrlStrings), requestBody.Type, requestBody.Private, requestBody.RealtyGroupName, requestBody.Payload).Scan(&uuid)
+	err = preparedStatements[25].QueryRow(req_body.Title, req_body.Description, token_data["username"], token_data["user_uuid"], pq.Array(imageUrlStrings), req_body.Type, req_body.Private, req_body.RealtyGroupName, req_body.Payload).Scan(&uuid)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -152,83 +128,49 @@ func createSpotlightPost(w http.ResponseWriter, r *http.Request, body []byte) {
 		return
 	}
 
-
 	sendJSONResponse(w, true, "/spotlightInfo/?uuid=" + uuid, http.StatusOK)	
 }
 
-func createPropertyPost(w http.ResponseWriter, r *http.Request, body []byte) {
+func createPropertyPost(w http.ResponseWriter, req_body CreatePostBody) {
 	type NecessaryData struct {
 		Price   string `json:"price"`
 		Address string `json:"address"`
 	}
 
-	token_data, err := getTokenPayload(requestBody.Token)
+	token_data, err := getTokenPayload(req_body.Token)
 	if err != nil {
 		sendJSONResponse(w, false, "Internal error"+string(err.Error()), http.StatusInternalServerError)
 		return
 	}
 
-	var data NecessaryData
-	err = json.Unmarshal([]byte(requestBody.Payload), &data)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+	prod_id, _, err := GetUserSubscription(token_data["email"].(string))
+    listings := getListingsLimit(err, prod_id)
 
-	// api_key := "da728a60c8e04dd0884f4b0670645b2e"
-	// endpoint := "https://api.geoapify.com/v1/geocode/search"
-	// params := url.Values{}
-	// params.Add("text", data.Address)
-	// params.Add("apiKey", api_key)
+	if isAtListingLimit(listings, token_data["user_uuid"].(string)) {
+        sendJSONResponse(w, false, fmt.Sprintf("Already at listing limit of %d", listings), http.StatusBadRequest)
+        return
+    }
 
+    var data NecessaryData
+    if err = json.Unmarshal([]byte(req_body.Payload), &data); err != nil {
+        log.Println("Error:", err)
+        return
+    }
 	
-	api_key := "AIzaSyAHz5ybmJZiZcHTlfHXGdin_Y2Olt0KViE"
-	endpoint := "https://maps.googleapis.com/maps/api/geocode/json"
-	params := url.Values{}
-	params.Add("address", data.Address)
-	params.Add("key", api_key)
-
-	// https://maps.googleapis.com/maps/api/geocode/json?address=%22649%20Hall%Station%20Rd%20Kingston%20GA%22&key=AIzaSyAHz5ybmJZiZcHTlfHXGdin_Y2Olt0KViE
-
-	resp, err := http.Get(endpoint + "?" + params.Encode())
-	if err != nil {
-		log.Fatalf("Failed to make request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	body, err = io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalf("Failed to read response body: %v", err)
-	}
-
-	var response Response;
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		log.Fatalf("Failed to parse JSON: %v", err)
-	}
-
-	log.Println("Creating post?")
+	lat, lng, err := getGeolocation(data.Address)
+    if err != nil {
+        sendJSONResponse(w, false, "Failed to get geolocation", http.StatusInternalServerError)
+        return
+    }
 
 	var imageUrlStrings []string
-	for _, value := range requestBody.ImageUrls {
+	for _, value := range req_body.ImageUrls {
 		imageUrlStrings = append(imageUrlStrings, value.Src)
-	}
-
-	var lat, lng float64
-
-	if response.Status == "OK" && len(response.Results) > 0 {
-		// Extract latitude and longitude from the response
-		lat = response.Results[0].Geometry.Location.Lat
-		lng = response.Results[0].Geometry.Location.Lng
-	} else {
-		// Set default values if no valid result is found
-		lat = 0
-		lng = 0
 	}
 
 	// "INSERT INTO posts (title, description, author_username, author_uuid, image_urls, type, private, realty_group_name, latitude, longitude, payload) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING post_uuid",
 	var uuid string;
-	err = preparedStatements[11].QueryRow(requestBody.Title, requestBody.Description, token_data["username"], token_data["user_uuid"], pq.Array(imageUrlStrings), requestBody.Type, requestBody.Private, requestBody.RealtyGroupName, lat, lng, requestBody.Payload).Scan(&uuid)
+	err = preparedStatements[11].QueryRow(req_body.Title, req_body.Description, token_data["username"], token_data["user_uuid"], pq.Array(imageUrlStrings), req_body.Type, req_body.Private, req_body.RealtyGroupName, lat, lng, req_body.Payload).Scan(&uuid)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -239,6 +181,100 @@ func createPropertyPost(w http.ResponseWriter, r *http.Request, body []byte) {
 		return
 	}
 
-
 	sendJSONResponse(w, true, "/propertyInfo/?uuid=" + uuid, http.StatusOK)	
+}
+
+func getListingsLimit(err error, prodID string) int {
+    if err != nil {
+        return 0
+    }
+    return SubMap[prodID].Listings
+}
+
+func isAtListingLimit(listings int, userUUID string) bool {
+    var amt int
+    preparedStatements[41].QueryRow(userUUID, 0).Scan(&amt)
+    return listings < amt
+}
+
+func getGeolocation(address string) (float64, float64, error) {
+    apiKey := os.Getenv("GOOGLE_API_KEY")
+    endpoint := "https://maps.googleapis.com/maps/api/geocode/json"
+
+    params := url.Values{}
+    params.Add("address", address)
+    params.Add("key", apiKey)
+
+    resp, err := http.Get(endpoint + "?" + params.Encode())
+    if err != nil {
+        return 0, 0, fmt.Errorf("failed to make request: %w", err)
+    }
+    defer resp.Body.Close()
+
+    body, err := io.ReadAll(resp.Body)
+    if err != nil {
+        return 0, 0, fmt.Errorf("failed to read response body: %w", err)
+    }
+
+    var response Response
+    err = json.Unmarshal(body, &response)
+    if err != nil {
+        return 0, 0, fmt.Errorf("failed to parse JSON: %w", err)
+    }
+
+    if response.Status != "OK" || len(response.Results) == 0 {
+        return 0, 0, nil
+    }
+
+    return response.Results[0].Geometry.Location.Lat, response.Results[0].Geometry.Location.Lng, nil
+}
+
+func validateCreatePostBody(req_body CreatePostBody) error {
+	// Check if Title is empty
+	if req_body.Title == "" {
+		return fmt.Errorf("title is required")
+	}
+
+	// Check if Description is empty
+	if req_body.Description == "" {
+		return fmt.Errorf("description is required")
+	}
+
+	// Check if Token is empty
+	if req_body.Token == "" {
+		return fmt.Errorf("token is required")
+	}
+
+	// Check if ImageUrls has at least one image
+	if len(req_body.ImageUrls) == 0 {
+		return fmt.Errorf("at least one image is required")
+	}
+
+	// Validate each image URL and its attributes (optional, but recommended)
+	for _, image := range req_body.ImageUrls {
+		if image.Src == "" {
+			return fmt.Errorf("Image URL is required")
+		}
+		// if image.Scale <= 0 {
+		// 	return fmt.Errorf("Image scale must be greater than zero")
+		// }
+	}
+
+	// Check if Type is within an acceptable range (assuming 0 and 2 are valid types)
+	if req_body.Type != 0 && req_body.Type != 2 {
+		return fmt.Errorf("invalid post type")
+	}
+
+	// Check if RealtyGroupName is provided if it's required for certain types
+	// if req_body.Type == 0 && req_body.RealtyGroupName == "" {
+	// 	return fmt.Errorf("realty group name is required for type 0 posts")
+	// }
+
+	// Check if Payload is empty
+	if req_body.Payload == "" {
+		return fmt.Errorf("payload is required")
+	}
+
+	// All validations passed
+	return nil
 }

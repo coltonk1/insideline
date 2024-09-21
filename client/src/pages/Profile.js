@@ -185,7 +185,7 @@ async function followAPI(uuid) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user_uuid: localStorage.getItem("uuid"), target_uuid: uuid }),
+            body: JSON.stringify({ token: localStorage.getItem("token"), target_uuid: uuid }),
         });
 
         if (!response.ok) {

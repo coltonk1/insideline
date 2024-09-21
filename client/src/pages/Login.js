@@ -134,9 +134,9 @@ function App() {
             }
 
             const data = await response.json();
-            let result = data.message.split("||");
-            localStorage.setItem("token", result[0]);
-            localStorage.setItem("uuid", result[1]);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("uuid", data.user_uuid);
+            localStorage.setItem("username", data.username);
             window.location.href = "/home";
         } catch (error) {
             console.error("Error:", error.message);

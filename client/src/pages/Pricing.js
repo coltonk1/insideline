@@ -71,6 +71,36 @@ function App() {
         setTotalPrice(calculatePrice2(units));
     }, [units]);
 
+    const [invoiceData, setInvoiceData] = useState();
+
+    async function getInvoice() {
+        const body = { token: localStorage.getItem("token") };
+
+        try {
+            const response = await fetch(process.env.REACT_APP_SERVER_URL + "/upcomingInvoice", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body),
+            });
+
+            if (!response.ok) {
+                let result = await response.text();
+                throw new Error(result, "Error");
+            }
+            let result = await response.json();
+            setInvoiceData(result);
+            return result;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            getInvoice();
+        }
+    }, []);
+
     const handleSubmit = async (event) => {
         // event.preventDefault();
 
@@ -160,9 +190,11 @@ function App() {
             </p> */}
             <div className="options">
                 <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Basic Plan"}
                     description={
                         <ul>
-                            <li>1 Active Listing</li>
+                            <li>3 Active Listings</li>
                             {/* <li>Basic Portfolio</li> */}
                         </ul>
                     }
@@ -171,9 +203,11 @@ function App() {
                     priceID={"price_1PunFlJludLhGkYCJGdtr0Oe"}
                 />
                 <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Standard Plan"}
                     description={
                         <ul>
-                            <li>4 Active Listing</li>
+                            <li>10 Active Listings</li>
                             {/* <li>Portfolio With Basic Customization</li> */}
                         </ul>
                     }
@@ -182,9 +216,11 @@ function App() {
                     priceID={"price_1PunFpJludLhGkYCdWbW9RVA"}
                 />
                 <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Premium Plan"}
                     description={
                         <ul>
-                            <li>10 Active Listing</li>
+                            <li>25 Active Listings</li>
                             {/* <li>1 Featured Listing</li> */}
                             {/* <li>Portfolio With Advanced Customization</li> */}
                             {/* <li>Basic Analytics</li> */}
@@ -195,9 +231,11 @@ function App() {
                     priceID={"price_1PunFqJludLhGkYCSgqMnW3V"}
                 />
                 <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Pro Plan"}
                     description={
                         <ul>
-                            <li>20 Active Listing</li>
+                            <li>50 Active Listings</li>
                             {/* <li>5 Featured Listings</li> */}
                             {/* <li>Portfolio With Advanced Customization</li> */}
                             {/* <li>Custom URL support for Portfolio</li> */}
@@ -210,9 +248,11 @@ function App() {
                     priceID={"price_1PunFsJludLhGkYC9XKdmFYD"}
                 />
                 <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Business Plan"}
                     description={
                         <ul>
-                            <li>350 Active Listing</li>
+                            <li>600 Active Listings</li>
                             {/* <li>70 Featured Listings</li> */}
                             {/* <li>Multi-user Access</li> */}
                             {/* <li>Advanced Analytics</li> */}
@@ -229,7 +269,7 @@ function App() {
     );
 }
 
-function PurchaseOption({ description, title, price, priceID }) {
+function PurchaseOption({ description, title, price, priceID, active, hasSubscription }) {
     const createCheckoutSession = async (priceID) => {
         console.log("creating");
         if (!localStorage.getItem("token")) {
@@ -281,21 +321,35 @@ function PurchaseOption({ description, title, price, priceID }) {
     };
 
     return (
-        <div className="purchase-option">
-            <div className="title">{title}</div>
+        <div className={"purchase-option" + (active ? " active-option" : "")}>
+            <div className="title">
+                {title}
+                {active ? <p className="your-plan">(current)</p> : ""}
+            </div>
             <div className="description">{description}</div>
             <div className="price-amt">
                 {price} <div className="per-month">per month</div>
             </div>
 
-            <a
-                className="lightSpecialButton"
-                onClick={() => {
-                    createBillingPortal(priceID);
-                }}
-            >
-                Purchase
-            </a>
+            {hasSubscription ? (
+                <a
+                    className="lightSpecialButton"
+                    onClick={() => {
+                        createBillingPortal(priceID);
+                    }}
+                >
+                    {active ? "Current Plan" : "Update"}
+                </a>
+            ) : (
+                <a
+                    className="lightSpecialButton"
+                    onClick={() => {
+                        createBillingPortal(priceID);
+                    }}
+                >
+                    Purchase
+                </a>
+            )}
         </div>
     );
 }

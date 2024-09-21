@@ -20,3 +20,11 @@
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+
+/server/.env
+/client/.env
+/server/*.sql
+/server/keys.txt
+/server/backend
+/server/server.exe
+/client/.gitignore

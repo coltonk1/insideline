@@ -24,6 +24,7 @@ a:hover {
     color: #4059ed;
 }
 p > a {
+    font-weight: 400;
     color: #4059ed;
 }
 p > a:hover {
@@ -125,67 +126,103 @@ header > .right-side {
     display: flex;
     gap: 10px;
 }
-.logged-in > .create-post {
-    height: 30px;
+.create-post {
+    height: 15px;
     display: flex;
     gap: 10px;
-    padding: 5px 15px;
-    border-radius: 30px;
+    padding: 10px 12px;
+    border-radius: 10px;
     font-weight: bold;
     line-height: 30px;
     transition: 0.2s;
     background: #4059ed;
     color: white;
+    position: relative;
 }
-.logged-in > .create-post > img {
+.create-post > img {
     object-fit: contain;
     width: 100%;
     height: 100%;
 }
-.logged-in > .header-profile > .profile-picture {
+.create-post-container {
+    width: fit-content;
+    position: relative;
+}
+#create-post:hover {
+    background: #4763ff;
+}
+#create-post::after {
+    opacity: 0;
+    content: "Create new...";
+    position: absolute;
+    width: fit-content;
+    font-weight: 400;
+    background: #989898;
+    width: 100px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    left: 50%;
+    top: 40px;
+    transform: translate(-50%, 0);
+    transition: 0.1s;
+    z-index: 5;
+    color: white;
+    pointer-events: none;
+}
+#create-post:hover::after {
+    opacity: 1;
+    transition: 0.25s 0.7s;
+}
+.header-profile > .profile-picture {
     overflow: hidden;
     border-radius: 50%;
     width: 45px;
     height: 45px;
     box-shadow: 0 0 5px 3px #80808090;
 }
-.logged-in > .header-profile > .profile-picture > img {
+.header-profile > .profile-picture > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.logged-in > .header-profile {
+.header-profile {
     display: flex;
     width: fit-content;
     gap: 5px;
 }
-.logged-in > .header-profile > p {
+.header-profile > p {
     max-width: 20vw;
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
 }
-.logged-in > .header-profile > img:last-child {
+.header-profile > img:last-child {
     margin-left: -5px;
     opacity: 0.5;
+}
+.header-profile-container {
+    position: relative;
+    width: fit-content;
 }
 #signInHeaderInfo {
     display: none;
     position: absolute;
-    right: 0;
     background: white;
     width: 200px;
     height: fit-content;
     flex-direction: column;
-    row-gap: 15px;
+    row-gap: 8px;
     padding: 30px 0;
     border-radius: 0 0 10px 10px;
     box-shadow: 0 10px 10px 2px #80808050;
     border-top: 1px solid grey;
     z-index: 5;
-    top: 70px;
-    right: calc(10% - 80px);
+    top: 58px;
+    left: 50%;
+    transform: translate(-50%, 0);
     padding: 10px;
+    z-index: 1;
 }
 #signInHeaderInfo > div {
     width: fit-content;
@@ -593,4 +630,52 @@ p.inline {
     header > a {
         display: none;
     }
+}
+
+#create-post-drop {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 53px;
+    width: 200px;
+    background: white;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 10px 10px 3px #80808050;
+    border-top: 1px solid grey;
+}
+
+#create-post-drop > ul {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+}
+#create-post-drop > ul > li > a > img {
+    width: 20px;
+    height: 20px;
+    margin-left: 0;
+    margin-right: 0;
+    opacity: 0.7;
+}
+#create-post-drop > ul > li > a > p {
+    margin-left: 5px;
+    color: black;
+    font-weight: 400;
+}
+#create-post-drop > ul > li > a {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    width: 180px;
+    height: fit-content;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+#create-post-drop > ul > li > a:hover {
+    background: #4059ed;
+}
+
+#create-post-drop > ul > li > a:hover > p {
+    color: white;
 }

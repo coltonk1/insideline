@@ -89,7 +89,8 @@ function App() {
             {invoiceData && (
                 <div>
                     <div className="invoice">
-                        <div className="amt-due">${invoiceData.amount_due}</div>
+                        <div className="amt-due">{invoiceData.subscription_name}</div>
+                        <div className="amt-due">${(invoiceData.amount_due / 100).toFixed(2)}</div>
                         <div className="due-date">Charged on {getDate().toString()}</div>
                         <div className="card-details">
                             <p>Using card:</p>

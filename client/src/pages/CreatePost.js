@@ -198,7 +198,7 @@ async function callAPI2(body) {
     }
 }
 
-function PropertyPost({ presetData }) {
+function PropertyPost({ presetData, portfolio = false }) {
     const [images, setImages] = useState([]);
     const [displayImage, setDisplayImage] = useState({ src: "", scale: 1, position: { left: 0, top: 0 } });
     const [filter, setFilter] = useState("");
@@ -206,6 +206,12 @@ function PropertyPost({ presetData }) {
     const [activeValues, setActiveValues] = useState([]);
     const [currentTags, setCurrentTags] = useState([]);
     const [error, setError] = useState("");
+
+    const [usingPortfolio, setUsingPortfolio] = useState(portfolio);
+
+    useEffect(() => {
+        setUsingPortfolio(portfolio);
+    }, [portfolio]);
 
     const initialize = () => {
         var newImageData = [];
@@ -299,7 +305,7 @@ function PropertyPost({ presetData }) {
             return;
         }
 
-        const price = document.getElementById("price").value;
+        const price = document.querySelectorAll("#price")[usingPortfolio ? 1 : 0].value;
         if (price === "") {
             setError("Must have a price.");
             return;
@@ -327,7 +333,7 @@ function PropertyPost({ presetData }) {
         const description = document.getElementById("description").value;
         body["description"] = description;
         body["token"] = localStorage.getItem("token");
-        body["type"] = 0;
+        body["type"] = usingPortfolio ? 1 : 0;
         body["private"] = false;
         body["realty_group_name"] = "";
         body["payload"] = JSON.stringify(payload);
@@ -343,6 +349,7 @@ function PropertyPost({ presetData }) {
             console.log(body);
             result = await callAPI2(body);
         } else {
+            console.log(body);
             result = await callAPI(body);
         }
 
@@ -698,6 +705,41 @@ function PropertyPost({ presetData }) {
                     </ul>
                 </div>
             </div>
+            <div className="form-group">
+                <label htmlFor="price">Move to portfolio?</label>
+                <input
+                    type={"checkbox"}
+                    checked={usingPortfolio}
+                    onChange={(e) => {
+                        setUsingPortfolio(e.target.checked);
+                    }}
+                ></input>
+            </div>
+            {usingPortfolio ? (
+                <div className="form-group">
+                    <label htmlFor="price">Sold Price</label>
+                    <div className="multi-input">
+                        <div type="number" id="price_type">
+                            $
+                        </div>
+                        <input
+                            type="number"
+                            step="100"
+                            id="price"
+                            max="1000000000"
+                            className="input-field"
+                            defaultValue={presetData && presetData.Payload.price}
+                            onChange={(e) => {
+                                if (parseInt(e.target.value) > 1000000000) {
+                                    e.target.value = 1000000000;
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
+            ) : (
+                ""
+            )}
             <br />
             <br />
             <br />
@@ -995,6 +1037,7 @@ function App() {
 
     import("../styles/createPost.css");
     const [usingSpotlight, setUsingSpotlight] = useState(false);
+    const [usingPortfolio, setUsingPortfolio] = useState(false);
     async function callAPII(body) {
         try {
             const response = await fetch(process.env.REACT_APP_SERVER_URL + "/getSpecificPostData", {
@@ -1038,6 +1081,8 @@ function App() {
         }
         if (current === "spotlight") {
             setUsingSpotlight(true);
+        } else if (current === "portfolio") {
+            setUsingPortfolio(true);
         }
     }, []);
 
@@ -1059,6 +1104,7 @@ function App() {
                         className={!usingSpotlight ? "active" : ""}
                         onClick={() => {
                             setUsingSpotlight(false);
+                            setUsingPortfolio(false);
                             updateUrl("property");
                             setPresetData(null);
                         }}
@@ -1069,8 +1115,10 @@ function App() {
             </div>
             {usingSpotlight ? (
                 <SpotlightPost presetData={presetData}></SpotlightPost>
+            ) : usingPortfolio ? (
+                <PropertyPost portfolio={true} presetData={presetData}></PropertyPost>
             ) : (
-                <PropertyPost presetData={presetData}></PropertyPost>
+                <PropertyPost portfolio={false} presetData={presetData}></PropertyPost>
             )}
         </main>
     );
