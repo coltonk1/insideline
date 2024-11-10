@@ -31,6 +31,8 @@ async function callAPI() {
 
         const data = await response.json();
 
+        console.log(data);
+
         localStorage.setItem("user_location_data", JSON.stringify(data));
         window.location.reload();
     } catch (error) {
@@ -113,7 +115,9 @@ function App() {
 
         useEffect(() => {
             const fetchData = async () => {
-                let current_location = JSON.parse(localStorage.getItem("user_location_data"));
+                let current_location = JSON.parse(
+                    localStorage.getItem("user_location_data") || { postal: 10001, lat: 40.7128, lng: 74.006 }
+                );
                 let result = await getMarkersNear(current_location.lat, current_location.lng);
                 setData(result);
             };
@@ -127,7 +131,8 @@ function App() {
                 <title className="recent-title">
                     <p>Recently</p>Uploaded
                     <p>
-                        Near <p className="bold inline">{JSON.parse(localStorage.getItem("user_location_data")).postal}</p>
+                        Near{" "}
+                        <p className="bold inline">{JSON.parse(localStorage.getItem("user_location_data") || { postal: 10001 }).postal}</p>
                     </p>
                 </title>
                 <DisplayContainer>

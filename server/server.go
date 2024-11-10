@@ -1539,7 +1539,7 @@ func returnBasic(w http.ResponseWriter, r *http.Request) {
 
 
 func initDB() {
-    err := godotenv.Load()
+    err := godotenv.Load("/home/duck681/.env")
     if err != nil {
         log.Fatal("Error loading .env file")
     }
@@ -1692,11 +1692,12 @@ type SubDetails struct {
 }
 
 var SubMap = map[string]SubDetails{
-    "prod_Ql4uPlQOWQuGQy": {Listings: 3}, // $10
-    "prod_Ql4udLUWeBqwN2": {Listings: 10}, // $25
-    "prod_Ql4vhF1VbZSrSw": {Listings: 25}, // $50
-    "prod_Ql4vbHlnADlhym": {Listings: 50}, // $100
-    "prod_Ql4vrTOnXUaBgv": {Listings: 600}, // $1000
+    "free": {Listings: 7}, // $0
+    "prod_Ql4uPlQOWQuGQy": {Listings: 20}, // $10
+    "prod_Ql4udLUWeBqwN2": {Listings: 100}, // $25
+    // "prod_Ql4vhF1VbZSrSw": {Listings: 1000}, // $50
+    // "prod_Ql4vbHlnADlhym": {Listings: 1000}, // $100
+    // "prod_Ql4vrTOnXUaBgv": {Listings: 1000}, // $1000
 }
 
 func GetUserSubscription(email string) (string, string, error) {
@@ -1777,7 +1778,7 @@ func sendEmail(user_email string) (bool, error) {
         From:        "no-reply <do-not-reply@insidelineproperties.com>",
         To:          []string{user_email},
         Subject:     "Email Verification",
-        Html:        "<p>Click this link to verify your email: <a href='https://api.insidelineproperties.com/verifyUser?token="+token+"></a></p>",
+        Html:        "<p>Click this link to verify your email: <a href='https://api.insidelineproperties.com/verifyUser?token="+token+"'>Verify Email</a></p>",
     }
     sent, err := client.Emails.SendWithContext(ctx, params)
     if err != nil {
@@ -1788,7 +1789,7 @@ func sendEmail(user_email string) (bool, error) {
 }
 
 func main() {
-    err := godotenv.Load()
+    err := godotenv.Load("/home/duck681/.env")
     if err != nil {
         log.Fatal("Error loading .env file")
     }

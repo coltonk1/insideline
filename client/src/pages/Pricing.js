@@ -191,56 +191,61 @@ function App() {
             <div className="options">
                 <PurchaseOption
                     hasSubscription={invoiceData !== undefined}
-                    active={invoiceData && invoiceData.subscription_name == "Basic Plan"}
                     description={
                         <ul>
-                            <li>3 Active Listings</li>
+                            <li>7 Active Listings</li>
                             {/* <li>Basic Portfolio</li> */}
                         </ul>
                     }
-                    price={"$10.00"}
-                    title={"Basic Plan"}
-                    priceID={"price_1PunFlJludLhGkYCJGdtr0Oe"}
+                    price={"$0.00"}
+                    title={"Free Plan"}
                 />
                 <PurchaseOption
                     hasSubscription={invoiceData !== undefined}
                     active={invoiceData && invoiceData.subscription_name == "Standard Plan"}
                     description={
                         <ul>
-                            <li>10 Active Listings</li>
-                            {/* <li>Portfolio With Basic Customization</li> */}
+                            <li>20 Active Listings</li>
+                            {/* <li>Basic Portfolio</li> */}
                         </ul>
                     }
-                    price={"$25.00"}
+                    price={"$10.00"}
                     title={"Standard Plan"}
-                    priceID={"price_1PunFpJludLhGkYCdWbW9RVA"}
+                    priceID={"price_1PunFlJludLhGkYCJGdtr0Oe"}
                 />
                 <PurchaseOption
                     hasSubscription={invoiceData !== undefined}
                     active={invoiceData && invoiceData.subscription_name == "Premium Plan"}
                     description={
                         <ul>
-                            <li>25 Active Listings</li>
-                            {/* <li>1 Featured Listing</li> */}
-                            {/* <li>Portfolio With Advanced Customization</li> */}
-                            {/* <li>Basic Analytics</li> */}
+                            <li>100 Active Listings</li>
+                            {/* <li>Portfolio With Basic Customization</li> */}
                         </ul>
                     }
-                    price={"$50.00"}
+                    price={"$25.00"}
+                    title={"Premium Plan"}
+                    priceID={"price_1PunFpJludLhGkYCdWbW9RVA"}
+                />
+                {/* <PurchaseOption
+                    hasSubscription={invoiceData !== undefined}
+                    active={invoiceData && invoiceData.subscription_name == "Premium Plan"}
+                    description={
+                        <ul>
+                            <li>100 Active Listings</li>
+
+                        </ul>
+                    }
+                    price={"$25.00"}
                     title={"Premium Plan"}
                     priceID={"price_1PunFqJludLhGkYCSgqMnW3V"}
-                />
-                <PurchaseOption
+                /> */}
+                {/* <PurchaseOption
                     hasSubscription={invoiceData !== undefined}
                     active={invoiceData && invoiceData.subscription_name == "Pro Plan"}
                     description={
                         <ul>
                             <li>50 Active Listings</li>
-                            {/* <li>5 Featured Listings</li> */}
-                            {/* <li>Portfolio With Advanced Customization</li> */}
-                            {/* <li>Custom URL support for Portfolio</li> */}
-                            {/* <li>Advanced Analytics</li> */}
-                            {/* <li>Limited Video Support</li> */}
+
                         </ul>
                     }
                     price={"$100.00"}
@@ -253,16 +258,13 @@ function App() {
                     description={
                         <ul>
                             <li>600 Active Listings</li>
-                            {/* <li>70 Featured Listings</li> */}
-                            {/* <li>Multi-user Access</li> */}
-                            {/* <li>Advanced Analytics</li> */}
-                            {/* <li>...</li> */}
+               
                         </ul>
                     }
                     price={"$1000.00"}
                     title={"Business Plan"}
                     priceID={"price_1PunFtJludLhGkYCv1IQuUks"}
-                />
+                /> */}
             </div>
             {/* {localStorage.getItem("token") ? <div>Checkout</div> : <div>Please log in to purchase a subscription.</div>} */}
         </main>
@@ -335,6 +337,10 @@ function PurchaseOption({ description, title, price, priceID, active, hasSubscri
                 <a
                     className="lightSpecialButton"
                     onClick={() => {
+                        if (title === "Free Plan") {
+                            createBillingPortal();
+                            return;
+                        }
                         createBillingPortal(priceID);
                     }}
                 >
@@ -344,10 +350,11 @@ function PurchaseOption({ description, title, price, priceID, active, hasSubscri
                 <a
                     className="lightSpecialButton"
                     onClick={() => {
+                        if (title === "Free Plan") return;
                         createBillingPortal(priceID);
                     }}
                 >
-                    Purchase
+                    {title === "Free Plan" ? "Active" : "Purchase"}
                 </a>
             )}
         </div>

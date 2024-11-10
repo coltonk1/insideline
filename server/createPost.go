@@ -186,7 +186,7 @@ func createPropertyPost(w http.ResponseWriter, req_body CreatePostBody) {
 
 func getListingsLimit(err error, prodID string) int {
     if err != nil {
-        return 0
+        return SubMap["free"].Listings
     }
     return SubMap[prodID].Listings
 }
@@ -194,7 +194,7 @@ func getListingsLimit(err error, prodID string) int {
 func isAtListingLimit(listings int, userUUID string) bool {
     var amt int
     preparedStatements[41].QueryRow(userUUID, 0).Scan(&amt)
-    return listings < amt
+    return listings <= amt
 }
 
 func getGeolocation(address string) (float64, float64, error) {
@@ -261,7 +261,7 @@ func validateCreatePostBody(req_body CreatePostBody) error {
 	}
 
 	// Check if Type is within an acceptable range (assuming 0 and 2 are valid types)
-	if req_body.Type != 0 && req_body.Type != 2 {
+	if req_body.Type != 0 && req_body.Type != 1 && req_body.Type != 2 {
 		return fmt.Errorf("invalid post type")
 	}
 
