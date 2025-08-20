@@ -1051,8 +1051,8 @@ func verifyUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func initStripe() {
-    // stripe.Key = "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"
-    stripe.Key = "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"
+    // stripe.Key = "sk_live"
+    stripe.Key = "sk_live"
 
 }
 
@@ -1376,13 +1376,13 @@ func getLocationFromAddress(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-    api_key := "AIzaSyAHz5ybmJZiZcHTlfHXGdin_Y2Olt0KViE"
+    api_key := "AIza..."
 	endpoint := "https://maps.googleapis.com/maps/api/geocode/json"
 	params := url.Values{}
 	params.Add("address", requestBody.Address)
 	params.Add("key", api_key)
 
-	// https://maps.googleapis.com/maps/api/geocode/json?address=%22649%20Hall%Station%20Rd%20Kingston%20GA%22&key=AIzaSyAHz5ybmJZiZcHTlfHXGdin_Y2Olt0KViE
+	// https://maps.googleapis.com/maps/api/geocode/json?address=
 
 	resp, err := http.Get(endpoint + "?" + params.Encode())
 	if err != nil {
